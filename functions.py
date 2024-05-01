@@ -52,7 +52,15 @@ def atoms(formula: Formula):
     This piece of code above prints: p, s
     (Note that there is no repetition of p)
     """
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    
+    if isinstance(formula, Atom):
+        return {formula}
+    if isinstance(formula, Not):
+        return atoms(formula.inner)
+    if isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        atoms1 = atoms(formula.left)
+        atoms2 = atoms(formula.right)
+        return atoms1.union(atoms2)
 
 
 def number_of_atoms(formula: Formula):
@@ -62,7 +70,8 @@ def number_of_atoms(formula: Formula):
 
     must return 3 (Observe that this function counts the repetitions of atoms)
     """
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+
+    return len(atoms(formula))
 
 
 def number_of_connectives(formula: Formula):
