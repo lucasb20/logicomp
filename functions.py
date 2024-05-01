@@ -91,7 +91,7 @@ def is_literal(formula: Formula):
     if isinstance(formula, Atom):
         return True
     if isinstance(formula, Not):
-        return isinstance(formula.inner, Atom)
+        return is_literal(formula.inner)
     else:
         return False
 
@@ -99,12 +99,26 @@ def is_literal(formula: Formula):
 def substitution(formula: Formula, old_subformula: Formula, new_subformula: Formula):
     """Returns a new formula obtained by replacing all occurrences
     of old_subformula in the input formula by new_subformula."""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+
+    if isinstance(formula, Atom):
+        return new_subformula if formula == old_subformula else formula
+    if isinstance(formula, Not):
+        return new_subformula if formula == old_subformula else Not(substitution(formula.inner, old_subformula, new_subformula))
+    if isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        return new_subformula if formula == old_subformula else formula.__class__(substitution(formula.left, old_subformula, new_subformula), substitution(formula.right, old_subformula, new_subformula))
 
 
 def is_clause(formula: Formula):
     """Returns True if formula is a clause. It returns False, otherwise"""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    
+    if isinstance(formula, Atom):
+        return True
+    if isinstance(formula, Not):
+        return is_literal(formula.inner)
+    if isinstance(formula, Or):
+        return is_clause(formula.left) and is_clause(formula.right)
+    else:
+        return False
 
 
 def is_negation_normal_form(formula: Formula):
