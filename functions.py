@@ -76,12 +76,24 @@ def number_of_atoms(formula: Formula):
 
 def number_of_connectives(formula: Formula):
     """Returns the number of connectives occurring in a formula."""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+
+    if isinstance(formula, Atom):
+        return 0
+    if isinstance(formula, Not):
+        return number_of_connectives(formula.inner) + 1
+    if isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        return number_of_connectives(formula.left) + number_of_connectives(formula.right) + 1
 
 
 def is_literal(formula: Formula):
     """Returns True if formula is a literal. It returns False, otherwise"""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    
+    if isinstance(formula, Atom):
+        return True
+    if isinstance(formula, Not):
+        return isinstance(formula.inner, Atom)
+    else:
+        return False
 
 
 def substitution(formula: Formula, old_subformula: Formula, new_subformula: Formula):
