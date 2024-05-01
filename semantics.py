@@ -31,10 +31,15 @@ def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the
     for formula in premises:
         symbols.union(atoms(formula))
     
-    def TT_CHECK_ALL(KB, a, symbols : set, model : dict):
+    def PL_TRUE(KB, model):
+        for sen in KB:
+            if not truth_value(sen, model): return False
+        return True
+    
+    def TT_CHECK_ALL(KB, a, symbols, model):
         if len(symbols) == 0:
-            if truth_value(KB, model):
-                return truth_value(a, model)
+            if PL_TRUE(KB, model):
+                return PL_TRUE([a], model)
             else:
                 return True
         else:
@@ -43,7 +48,7 @@ def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the
             return (TT_CHECK_ALL(KB, a, rest, {**model, p : True})
                     and TT_CHECK_ALL(KB, a, rest, {**model, p : False}))
 
-    return TT_CHECK_ALL(premises, conclusion, symbols, {})
+    return TT_CHECK_ALL(premises, conclusion, list(symbols), {})
 
 def is_logical_equivalence(formula1, formula2):
     """Checks whether formula1 and formula2 are logically equivalent."""
