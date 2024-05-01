@@ -112,7 +112,7 @@ class Iff(Formula):
         return hash((hash(self.left), hash(self.right), 'iff'))
 
 
-class Xor:      
+class Xor(Formula):      
     def __init__(self, left: Formula, right: Formula):
         super().__init__()
         self.left = left
