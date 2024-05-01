@@ -11,6 +11,8 @@ def truth_value(formula, interpretation):
     """
     
     if isinstance(formula, Atom):
+        if formula.name not in interpretation:
+            raise ValueError(f"{formula.name} not in interpretation.")
         return interpretation.get(formula.name)
     elif isinstance(formula, Not):
         return not truth_value(formula.inner, interpretation)
@@ -24,9 +26,24 @@ def truth_value(formula, interpretation):
 
 def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the book AIMA.
     """Returns True if the conclusion is a logical consequence of the set of premises. Otherwise, it returns False."""
-    pass
-    # ======== YOUR CODE HERE ========
+    
+    symbols = atoms(conclusion)
+    for formula in premises:
+        symbols.union(atoms(formula))
+    
+    def TT_CHECK_ALL(KB, a, symbols : set, model : dict):
+        if len(symbols) == 0:
+            if truth_value(KB, model):
+                return truth_value(a, model)
+            else:
+                return True
+        else:
+            p = symbols[0]
+            rest = symbols[1:]
+            return (TT_CHECK_ALL(KB, a, rest, {**model, p : True})
+                    and TT_CHECK_ALL(KB, a, rest, {**model, p : False}))
 
+    return TT_CHECK_ALL(premises, conclusion, symbols, {})
 
 def is_logical_equivalence(formula1, formula2):
     """Checks whether formula1 and formula2 are logically equivalent."""
