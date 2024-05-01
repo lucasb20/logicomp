@@ -96,17 +96,33 @@ class Or(Formula):
         return hash((hash(self.left), hash(self.right), 'or'))
 
 
-class Iff:
-    """
-    Describes the 'if and only if' logical connective (<->) from propositional logic.
-    Unicode value for <-> is 2194.
-    """
-    pass
+class Iff(Formula):
+    def __init__(self, left: Formula, right: Formula):
+        super().__init__()
+        self.left = left
+        self.right = right
+
+    def __str__(self):
+        return f"({self.left} \u2194 {self.right})"
+
+    def __eq__(self, other: Formula):
+        return isinstance(other, Iff) and other.left == self.left and other.right == self.right
+
+    def __hash__(self):
+        return hash((hash(self.left), hash(self.right), 'iff'))
 
 
-class Xor:
-    """
-    Describes the xor (exclusive or) logical connective from propositional logic.
-    Unicode value for xor is 2295.
-    """
-    pass
+class Xor:      
+    def __init__(self, left: Formula, right: Formula):
+        super().__init__()
+        self.left = left
+        self.right = right
+
+    def __str__(self):
+        return f"({self.left} \u2295 {self.right})"
+
+    def __eq__(self, other: Formula):
+        return isinstance(other, Xor) and other.left == self.left and other.right == self.right
+
+    def __hash__(self):
+        return hash((hash(self.left), hash(self.right), 'xor'))
