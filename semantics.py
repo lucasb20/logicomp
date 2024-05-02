@@ -54,8 +54,19 @@ def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the
 
 def is_logical_equivalence(formula1, formula2):
     """Checks whether formula1 and formula2 are logically equivalent."""
-    pass
-    # ======== YOUR CODE HERE ========
+    
+    symbols = atoms(formula1)
+    symbols = [ formula.name for formula in symbols ]
+
+    def check_both(form1, form2, symbols, model):
+        if len(symbols) == 0:
+            return truth_value(form1, model) == truth_value(form2, model)
+        p = symbols[0]
+        rest = symbols[1:]
+        return (check_both(form1, form2, rest, {**model, p : True})
+                and check_both(form1, form2, rest, {**model, p : False}))
+
+    return check_both(formula1, formula2, symbols, {})
 
 
 def is_valid(formula):
