@@ -71,8 +71,19 @@ def is_logical_equivalence(formula1, formula2):
 
 def is_valid(formula):
     """Returns True if formula is a logically valid (tautology). Otherwise, it returns False"""
-    pass
-    # ======== YOUR CODE HERE ========
+
+    symbols = atoms(formula)
+    symbols = [symb.name for symb in symbols]
+
+    def check_all(form, symbols, model):
+        if len(symbols) == 0:
+            return truth_value(form, model)
+        p = symbols[0]
+        rest = symbols[1:]
+        return (check_all(form, rest, {**model, p : True}) and
+                check_all(form, rest, {**model, p : False}))
+    
+    return check_all(formula, symbols, {})
 
 
 def satisfiability_brute_force(formula):
