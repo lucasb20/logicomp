@@ -31,7 +31,7 @@ def is_logical_consequence(premises, conclusion):  # function TT-Entails? in the
     for formula in premises:
         symbols = symbols.union(atoms(formula))
     
-    symbols = [ formula.name for formula in symbols ]
+    symbols = [ symb.name for symb in symbols ]
 
     def PL_TRUE(KB, model):
         for sen in KB:
