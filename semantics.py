@@ -90,7 +90,16 @@ def satisfiability_brute_force(formula):
     """Checks whether formula is satisfiable.
     In other words, if the input formula is satisfiable, it returns an interpretation that assigns true to the formula.
     Otherwise, it returns False."""
-    pass
-    # ======== YOUR CODE HERE ========
 
+    symbols = atoms(formula)
+    symbols = [symb.name for symb in symbols]
 
+    def check_all(form, symbols, model):
+        if len(symbols) == 0:
+            return model if truth_value(form, model) else False
+        p = symbols[0]
+        rest = symbols[1:]
+        left = check_all(form, rest, {**model, p : True})
+        return left if left else check_all(form, rest, {**model, p : False})
+    
+    return check_all(formula, symbols, {})
