@@ -115,7 +115,25 @@ def function_symbols(formula):
 
 def atoms_fol(formula):
     """Returns the set of all atomic suformulas of a first-order formula"""
-    pass
+    if isinstance(formula, Fun):
+        atoms = set()
+        for arg in formula.args:
+            atoms = atoms.union(atoms_fol(arg))
+        return atoms
+    elif isinstance(formula, Atom):
+        return {formula}
+    elif isinstance(formula, Not):
+        return atoms_fol(formula.inner)
+    elif isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        atoms = set()
+        atoms = atoms.union(atoms_fol(formula.left))
+        atoms = atoms.union(atoms_fol(formula.right))
+        return atoms
+    elif isinstance(formula, ForAll) or isinstance(formula, Exists):
+        atoms = set()
+        atoms = atoms.union(atoms_fol(formula.inner))
+        return atoms
+    return set()
 
 
 def free_variables(formula):
