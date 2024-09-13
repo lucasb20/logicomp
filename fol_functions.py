@@ -147,7 +147,11 @@ def bounded_variables(formula):
 
 def universal_closure(formula):
     """Returns the universal closure of a formula"""
-    pass
+    result = formula
+    free_vars = free_variables(formula)
+    for var in free_vars:
+        result = ForAll(var, result)
+    return result
 
 
 def existential_closure(formula):
