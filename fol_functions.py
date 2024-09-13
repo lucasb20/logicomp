@@ -16,7 +16,29 @@ def length_fol(formula):
 
 def subformulas_fol(formula):
     """Returns the set of all subformulas of a first-order formula"""
-    pass
+    if isinstance(formula, Atom):
+        subformulas = set()
+        subformulas.add(formula)
+        for arg in formula.args:
+            subformulas = subformulas.union(subformulas_fol(arg))
+        return subformulas
+    elif isinstance(formula, Not):
+        subformulas = set()
+        subformulas.add(formula)
+        subformulas = subformulas.union(subformulas_fol(formula.inner))
+        return subformulas
+    elif isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        subformulas = set()
+        subformulas.add(formula)
+        subformulas = subformulas.union(subformulas_fol(formula.left))
+        subformulas = subformulas.union(subformulas_fol(formula.right))
+        return subformulas
+    elif isinstance(formula, ForAll) or isinstance(formula, Exists):
+        subformulas = set()
+        subformulas.add(formula)
+        subformulas = subformulas.union(subformulas_fol(formula.inner))
+        return subformulas
+    return set()
 
 
 def constants_from_term(term):
