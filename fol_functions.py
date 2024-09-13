@@ -1,5 +1,5 @@
-from fol_formula import *
-from term import *
+from fol_formula import Atom, Not, Implies, And, Or, ForAll, Exists
+from term import Con, Var, Fun
 
 
 def length_fol(formula):
@@ -47,7 +47,16 @@ def function_symbols_from_term(term):
     function_symbols_from_term(Fun('g', [Fun('f', [Var('x'), Con('a')])]))
     must return {'f', 'g'}
     """
-    pass
+    if isinstance(term, Con):
+        return set()
+    elif isinstance(term, Var):
+        return set()
+    elif isinstance(term, Fun):
+        functions = set()
+        functions.add(term.name)
+        for arg in term.args:
+            functions = functions.union(function_symbols_from_term(arg))
+        return functions
 
 
 def all_constants(formula):
