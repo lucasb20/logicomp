@@ -2,6 +2,8 @@ class Term:
     def __init__(self):
         pass
 
+    def __repr__(self):
+        return str(self)
 
 class Con(Term):
 

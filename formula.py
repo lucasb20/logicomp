@@ -13,6 +13,9 @@ class Formula:
     def __init__(self):
         pass
 
+    def __repr__(self):
+        return str(self)
+
 
 class Atom(Formula):
     """
