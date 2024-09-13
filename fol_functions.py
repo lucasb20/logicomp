@@ -142,7 +142,29 @@ def free_variables(formula):
 
 def bounded_variables(formula):
     """Returns the set of all bounded variables of a formula"""
-    pass
+    if isinstance(formula, Fun):
+        bounded_vars = set()
+        for arg in formula.args:
+            bounded_vars = bounded_vars.union(bounded_variables(arg))
+        return bounded_vars
+    elif isinstance(formula, Atom):
+        bounded_vars = set()
+        for arg in formula.args:
+            bounded_vars = bounded_vars.union(bounded_variables(arg))
+        return bounded_vars
+    elif isinstance(formula, Not):
+        return bounded_variables(formula.inner)
+    elif isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        bounded_vars = set()
+        bounded_vars = bounded_vars.union(bounded_variables(formula.left))
+        bounded_vars = bounded_vars.union(bounded_variables(formula.right))
+        return bounded_vars
+    elif isinstance(formula, ForAll) or isinstance(formula, Exists):
+        bounded_vars = set()
+        bounded_vars.add(formula.var)
+        bounded_vars.union(bounded_variables(formula.inner))
+        return bounded_vars
+    return set()
 
 
 def universal_closure(formula):
