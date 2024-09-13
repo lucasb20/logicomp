@@ -43,7 +43,15 @@ def subformulas_fol(formula):
 
 def constants_from_term(term):
     """Returns the set of all constant occurring in a term"""
-    pass
+    if isinstance(term, Con):
+        return {term}
+    if isinstance(term, Var):
+        return set()
+    if isinstance(term, Fun):
+        constants = set()
+        for arg in term.args:
+            constants = constants.union(constants_from_term(arg))
+        return constants
 
 
 def variables_from_term(term):
