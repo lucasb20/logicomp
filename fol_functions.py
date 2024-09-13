@@ -112,7 +112,32 @@ def atoms_fol(formula):
 
 def free_variables(formula):
     """Returns the set of all free variables of a formula"""
-    pass
+    if isinstance(formula, Var):
+        return {formula}
+    elif isinstance(formula, Fun):
+        free_vars = set()
+        for arg in formula.args:
+            free_vars = free_vars.union(free_variables(arg))
+        return free_vars
+    elif isinstance(formula, Atom):
+        free_vars = set()
+        for arg in formula.args:
+            free_vars = free_vars.union(free_variables(arg))
+        return free_vars
+    elif isinstance(formula, Not):
+        return free_variables(formula.inner)
+    elif isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        free_vars = set()
+        free_vars = free_vars.union(free_variables(formula.left))
+        free_vars = free_vars.union(free_variables(formula.right))
+        return free_vars
+    elif isinstance(formula, ForAll) or isinstance(formula, Exists):
+        free_vars = set()
+        free_vars = free_vars.union(free_variables(formula.inner))
+        if formula.var in free_vars:
+            free_vars.remove(formula.var)
+        return free_vars
+    return set()
 
 
 def bounded_variables(formula):
