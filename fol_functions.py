@@ -99,7 +99,20 @@ def predicate_symbols(formula):
     For example, predicate_symbols(Or(Atom('P', [Con('a')]), Atom('R', [Var('x')])))
     must return {'P', 'R'}
     """
-    pass
+    if isinstance(formula, Atom):
+        predicates = set()
+        predicates.add(formula.name)
+        return predicates
+    elif isinstance(formula, Not):
+        return predicate_symbols(formula.inner)
+    elif isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        predicates = set()
+        predicates = predicates.union(predicate_symbols(formula.left))
+        predicates = predicates.union(predicate_symbols(formula.right))
+        return predicates
+    elif isinstance(formula, ForAll) or isinstance(formula, Exists):
+        return predicate_symbols(formula.inner)
+    return set()
 
 
 def function_symbols(formula):
