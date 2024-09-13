@@ -110,7 +110,27 @@ def function_symbols(formula):
                                    )
     must return {'f', 'g'}
     """
-    pass
+    if isinstance(formula, Fun):
+        functions = set()
+        functions.add(formula.name)
+        for arg in formula.args:
+            functions = functions.union(function_symbols(arg))
+        return functions
+    elif isinstance(formula, Atom):
+        functions = set()
+        for arg in formula.args:
+            functions = functions.union(function_symbols(arg))
+        return functions
+    elif isinstance(formula, Not):
+        return function_symbols(formula.inner)
+    elif isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        functions = set()
+        functions = functions.union(function_symbols(formula.left))
+        functions = functions.union(function_symbols(formula.right))
+        return functions
+    elif isinstance(formula, ForAll) or isinstance(formula, Exists):
+        return function_symbols(formula.inner)
+    return set()
 
 
 def atoms_fol(formula):
