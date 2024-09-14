@@ -3,7 +3,7 @@ For example, the following piece of code creates an object representing an inter
 (∀x((P(a, x, f(b, y)) ∧ R(f(g(b), y))) ⟶ P(a, x, f(b, y)))).
 
 interpretation1 = Interpretation(domain = {1, 2, 3},
-                  predicates = {'P':{(1,1,1), (2,3,1), (3,1,2), (3,3,2)}
+                  predicates = {'P':{(1,1,1), (2,3,1), (3,1,2), (3,3,2)},
                                 'R':{(1, 2), (2,1), (2,2), (2,3), (3,3)}},
                   functions = {'f':{(1,1):1, (1,2):2, (1,3):1, (2,1):1, (2,2):3, (2,3):2, (3,1):1, (3,2):2, (3,3):3},
                                'g':{(1,): 2, (2,): 3, (3,): 2}},
@@ -15,7 +15,7 @@ Note that we use a dictionary to represent the interpretation of a function.
 """
 
 from fol_formula import *
-from term import *
+from term import Var, Con, Fun
 
 
 class Interpretation:
@@ -34,7 +34,14 @@ class Interpretation:
 
         must return 2
         """
-        pass
+        if isinstance(term, Var):
+            return self.variables[term.name]
+        elif isinstance(term, Con):
+            return self.constants[term.name]
+        elif isinstance(term, Fun):
+            fun = self.functions[term.name]
+            args = tuple(self.interpretation_term(arg) for arg in term.args)
+            return fun[args]
 
     def truth_value(self, formula):
         """Returns the the truth-value of an input first-order formula in a interpretation."""
