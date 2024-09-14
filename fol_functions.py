@@ -91,7 +91,28 @@ def function_symbols_from_term(term):
 
 def all_constants(formula):
     """Returns the set of all constant occurring in a formula"""
-    pass
+    if isinstance(formula, Con):
+        return {formula}
+    elif isinstance(formula, Fun):
+        constants = set()
+        for arg in formula.args:
+            constants = constants.union(all_constants(arg))
+        return constants
+    elif isinstance(formula, Atom):
+        constants = set()
+        for arg in formula.args:
+            constants = constants.union(all_constants(arg))
+        return constants
+    elif isinstance(formula, Not):
+        return all_constants(formula.inner)
+    elif isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        constants = set()
+        constants = constants.union(all_constants(formula.left))
+        constants = constants.union(all_constants(formula.right))
+        return constants
+    elif isinstance(formula, ForAll) or isinstance(formula, Exists):
+        return all_constants(formula.inner)
+    return set()
 
 
 def predicate_symbols(formula):
