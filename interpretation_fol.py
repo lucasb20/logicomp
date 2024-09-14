@@ -14,7 +14,7 @@ interpretation1 = Interpretation(domain = {1, 2, 3},
 Note that we use a dictionary to represent the interpretation of a function.
 """
 
-from fol_formula import *
+from fol_formula import And, Atom, Exists, ForAll, Implies, Not, Or
 from term import Var, Con, Fun
 
 
@@ -45,4 +45,45 @@ class Interpretation:
 
     def truth_value(self, formula):
         """Returns the the truth-value of an input first-order formula in a interpretation."""
-        pass
+        if isinstance(formula, Atom):
+            predicate = self.predicates[formula.name]
+            args = tuple(self.interpretation_term(arg) for arg in formula.args)
+            return args in predicate
+        elif isinstance(formula, Not):
+            return not self.truth_value(formula.inner)
+        elif isinstance(formula, Implies):
+            return not self.truth_value(formula.left) or self.truth_value(formula.right)
+        elif isinstance(formula, And):
+            return self.truth_value(formula.left) and self.truth_value(formula.right)
+        elif isinstance(formula, Or):
+            return self.truth_value(formula.left) and self.truth_value(formula.right)
+        elif isinstance(formula, ForAll):
+            var = self.variables.get(formula.var, None)
+            for term in self.domain:
+                self.variables[formula.var] = term
+                if not self.truth_value(formula.inner):
+                    if var is not None:
+                        self.variables[formula.var] = var
+                    else:
+                        del self.variables[formula.var]
+                    return False
+            if var is not None:
+                self.variables[formula.var] = var
+            else:
+                del self.variables[formula.var]
+            return True
+        elif isinstance(formula, Exists):
+            var = self.variables.get(formula.var, None)
+            for term in self.domain:
+                self.variables[formula.var] = term
+                if self.truth_value(formula.inner):
+                    if var is not None:
+                        self.variables[formula.var] = var
+                    else:
+                        del self.variables[formula.var]
+                    return True
+            if var is not None:
+                self.variables[formula.var] = var
+            else:
+                del self.variables[formula.var]
+            return False

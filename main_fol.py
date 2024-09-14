@@ -58,5 +58,5 @@ print(f'Interpretation of variable {term3.name} in interpretation1 is {interpret
 print(f'Interpretation of function {term4.name} in interpretation1 is {interpretation1.functions[term4.name]}')
 print(f'Interpretation of predicate {formula1.name} in interpretation1 is {interpretation1.predicates[formula1.name]}')
 
-# print(interpretation1.interpretation_term(term5))
-# print(interpretation1.truth_value(formula3))
+print(interpretation1.interpretation_term(term5))
+print(interpretation1.truth_value(formula3))
