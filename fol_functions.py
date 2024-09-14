@@ -276,7 +276,27 @@ def number_free_occurrences(var, formula):
                                         )
     must return 1
     """
-    pass
+    if isinstance(formula, Var):
+        if formula == var:
+            return 1
+    elif isinstance(formula, Fun):
+        num_vars = 0
+        for arg in formula.args:
+            num_vars += number_free_occurrences(var, arg)
+        return num_vars
+    elif isinstance(formula, Atom):
+        num_vars = 0
+        for arg in formula.args:
+            num_vars += number_free_occurrences(var, arg)
+        return num_vars
+    elif isinstance(formula, Not):
+        return number_free_occurrences(var, formula.inner)
+    elif isinstance(formula, Implies) or isinstance(formula, And) or isinstance(formula, Or):
+        return number_free_occurrences(var, formula.left) + number_free_occurrences(var, formula.right)
+    elif isinstance(formula, ForAll) or isinstance(formula, Exists):
+        if formula.var != var:
+            return number_free_occurrences(var, formula.inner)
+    return 0
 
 
 # scope?
