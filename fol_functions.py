@@ -258,7 +258,11 @@ def universal_closure(formula):
 
 def existential_closure(formula):
     """Returns the existential closure of a formula"""
-    pass
+    result = formula
+    free_vars = free_variables(formula)
+    for var in free_vars:
+        result = Exists(var, result)
+    return result
 
 
 def number_free_occurrences(var, formula):
