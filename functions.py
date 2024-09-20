@@ -129,7 +129,9 @@ def is_negation_normal_form(formula):
 def is_cnf(formula):
     """Returns True if formula is in conjunctive normal form.
     Returns False, otherwise."""
-    pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
+    if isinstance(formula, And):
+        return is_cnf(formula.left) and is_cnf(formula.right)
+    return is_clause(formula)
 
 
 def is_term(formula):
