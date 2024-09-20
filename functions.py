@@ -2,10 +2,10 @@
 do some computation on its syntactic structure. """
 
 
-from formula import *
+from formula import Atom, And, Implies, Not, Or
 
 
-def length(formula: Formula):
+def length(formula):
     """Determines the length of a formula in propositional logic."""
     if isinstance(formula, Atom):
         return 1
@@ -15,7 +15,7 @@ def length(formula: Formula):
         return length(formula.left) + length(formula.right) + 1
 
 
-def subformulas(formula: Formula):
+def subformulas(formula):
     """Returns the set of all subformulas of a formula.
 
     For example, observe the piece of code below.
@@ -40,7 +40,7 @@ def subformulas(formula: Formula):
 #  we have shown in class that, for all formula A, len(subformulas(A)) <= length(A).
 
 
-def atoms(formula: Formula):
+def atoms(formula):
     """Returns the set of all atoms occurring in a formula.
 
     For example, observe the piece of code below.
@@ -63,7 +63,7 @@ def atoms(formula: Formula):
         return atoms1.union(atoms2)
 
 
-def number_of_atoms(formula: Formula):
+def number_of_atoms(formula):
     """Returns the number of atoms occurring in a formula.
     For instance,
     number_of_atoms(Implies(Atom('q'), And(Atom('p'), Atom('q'))))
@@ -74,7 +74,7 @@ def number_of_atoms(formula: Formula):
     return len(atoms(formula))
 
 
-def number_of_connectives(formula: Formula):
+def number_of_connectives(formula):
     """Returns the number of connectives occurring in a formula."""
 
     if isinstance(formula, Atom):
@@ -85,7 +85,7 @@ def number_of_connectives(formula: Formula):
         return number_of_connectives(formula.left) + number_of_connectives(formula.right) + 1
 
 
-def is_literal(formula: Formula):
+def is_literal(formula):
     """Returns True if formula is a literal. It returns False, otherwise"""
     
     if isinstance(formula, Atom):
@@ -96,7 +96,7 @@ def is_literal(formula: Formula):
         return False
 
 
-def substitution(formula: Formula, old_subformula: Formula, new_subformula: Formula):
+def substitution(formula, old_subformula, new_subformula):
     """Returns a new formula obtained by replacing all occurrences
     of old_subformula in the input formula by new_subformula."""
 
@@ -108,43 +108,42 @@ def substitution(formula: Formula, old_subformula: Formula, new_subformula: Form
         return new_subformula if formula == old_subformula else formula.__class__(substitution(formula.left, old_subformula, new_subformula), substitution(formula.right, old_subformula, new_subformula))
 
 
-def is_clause(formula: Formula):
+def is_clause(formula):
     """Returns True if formula is a clause. It returns False, otherwise"""
     
     if isinstance(formula, Atom):
         return True
-    if isinstance(formula, Not):
-        return is_literal(formula.inner)
-    if isinstance(formula, Or):
+    elif isinstance(formula, Not):
+        return isinstance(formula.inner, Atom)
+    elif isinstance(formula, Or):
         return is_clause(formula.left) and is_clause(formula.right)
-    else:
-        return False
+    return False
 
 
-def is_negation_normal_form(formula: Formula):
+def is_negation_normal_form(formula):
     """Returns True if formula is in negation normal form.
     Returns False, otherwise."""
     pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
 
 
-def is_cnf(formula: Formula):
+def is_cnf(formula):
     """Returns True if formula is in conjunctive normal form.
     Returns False, otherwise."""
     pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
 
 
-def is_term(formula: Formula):
+def is_term(formula):
     """Returns True if formula is a term. It returns False, otherwise"""
     pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
 
 
-def is_dnf(formula: Formula):
+def is_dnf(formula):
     """Returns True if formula is in disjunctive normal form.
     Returns False, otherwise."""
     pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
 
 
-def is_decomposable_negation_normal_form(formula: Formula):
+def is_decomposable_negation_normal_form(formula):
     """Returns True if formula is in decomposable negation normal form.
     Returns False, otherwise."""
     pass  # ======== REMOVE THIS LINE AND INSERT YOUR CODE HERE ========
